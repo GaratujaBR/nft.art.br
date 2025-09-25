@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atelier Digital - Contemporary Art Exhibition</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Core Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.0/echarts.min.js"></script>
+    
+    <!-- Splide CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                        'mono': ['JetBrains Mono', 'monospace']
+                    },
+                    colors: {
+                        'deep-gray': '#1a1a1a',
+                        'soft-gray': '#2d2d2d',
+                        'medium-gray': '#404040',
+                        'accent-blue': '#4a90e2',
+                        'accent-amber': '#f5a623',
+                        'accent-violet': '#9013fe'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            overflow-x: hidden;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #4a90e2 0%, #f5a623 50%, #9013fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .living-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+        
+        .living-card:hover {
+            transform: perspective(1000px) rotateX(5deg) rotateY(5deg) scale(1.05);
+            box-shadow: 0 25px 50px -12px rgba(74, 144, 226, 0.25);
+        }
+        
+        .particle-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.1) 0%, rgba(245, 166, 35, 0.1) 50%, rgba(144, 19, 254, 0.1) 100%);
+        }
+        
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .masonry-grid {
+            column-count: 4;
+            column-gap: 1.5rem;
+            break-inside: avoid;
+        }
+        
+        @media (max-width: 1024px) {
+            .masonry-grid { column-count: 3; }
+        }
+        
+        @media (max-width: 768px) {
+            .masonry-grid { column-count: 2; }
+        }
+        
+        @media (max-width: 480px) {
+            .masonry-grid { column-count: 1; }
+        }
+        
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 1.5rem;
+        }
+        
+        .nav-blur {
+            backdrop-filter: blur(20px);
+            background: rgba(26, 26, 26, 0.9);
+        }
+    </style>
+</head>
+<body class="bg-deep-gray text-white font-inter">
+    <!-- Particle Background -->
+    <div id="particle-bg" class="particle-bg"></div>
+    
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 nav-blur border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <h1 class="text-2xl font-bold gradient-text">Atelier</h1>
+                    <div class="hidden md:flex space-x-6">
+                        <a href="index.html" class="text-white hover:text-accent-blue transition-colors">Gallery</a>
+                        <a href="gallery.html" class="text-gray-400 hover:text-white transition-colors">Browse</a>
+                        <a href="about.html" class="text-gray-400 hover:text-white transition-colors">Community</a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="glass-effect px-4 py-2 rounded-lg hover:bg-white/10 transition-colors">
+                        Connect Wallet
+                    </button>
+                    <button class="md:hidden text-white">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center pt-20 hero-gradient">
+        <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
+            <div class="space-y-8">
+                <div class="space-y-4">
+                    <h1 class="text-6xl lg:text-8xl font-bold leading-none">
+                        <span class="block">Digital</span>
+                        <span class="block gradient-text">Exhibition</span>
+                    </h1>
+                    <p class="text-xl text-gray-300 max-w-lg leading-relaxed">
+                        Discover, collect, and experience contemporary digital art in an immersive gallery environment. 
+                        Where blockchain meets artistic innovation.
+                    </p>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <button onclick="scrollToGallery()" class="glass-effect px-8 py-4 rounded-lg hover:bg-white/10 transition-all hover:scale-105">
+                        Explore Gallery
+                    </button>
+                    <button onclick="window.location.href='about.html'" class="border border-white/20 px-8 py-4 rounded-lg hover:bg-white/10 transition-all">
+                        Learn More
+                    </button>
+                </div>
+                <div class="flex items-center space-x-8 pt-8">
+                    <div class="text-center">
+                        <div class="text-2xl font-bold gradient-text">2,847</div>
+                        <div class="text-sm text-gray-400">Artworks</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold gradient-text">1,293</div>
+                        <div class="text-sm text-gray-400">Artists</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold gradient-text">Ξ12,456</div>
+                        <div class="text-sm text-gray-400">Volume</div>
+                    </div>
+                </div>
+            </div>
+            <div class="relative">
+                <div class="aspect-square rounded-2xl overflow-hidden living-card">
+                    <img src="assets\images\hero-gallery.jpg" alt="Digital Gallery" class="w-full h-full object-cover">
+                </div>
+                <div class="absolute -bottom-6 -right-6 glass-effect p-4 rounded-xl">
+                    <div class="text-sm text-gray-300">Featured Artist</div>
+                    <div class="font-semibold">Maya Chen</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Featured Artworks Section -->
+    <section id="gallery" class="py-20 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="text-5xl font-bold mb-4">Featured Artworks</h2>
+                <p class="text-xl text-gray-400 max-w-2xl mx-auto">
+                    Experience contemporary digital art from emerging and established artists worldwide
+                </p>
+            </div>
+            
+            <!-- Filter Tabs -->
+            <div class="flex justify-center mb-12 scroll-reveal">
+                <div class="glass-effect rounded-xl p-1">
+                    <button class="filter-tab active px-6 py-3 rounded-lg transition-all" data-filter="all">All</button>
+                    <button class="filter-tab px-6 py-3 rounded-lg transition-all" data-filter="abstract">Abstract</button>
+                    <button class="filter-tab px-6 py-3 rounded-lg transition-all" data-filter="generative">Generative</button>
+                    <button class="filter-tab px-6 py-3 rounded-lg transition-all" data-filter="3d">3D Art</button>
+                </div>
+            </div>
+            
+            <!-- Artwork Grid -->
+            <div id="artwork-grid" class="masonry-grid scroll-reveal">
+                <!-- Artwork cards will be populated by JavaScript -->
+            </div>
+            
+            <!-- Load More Button -->
+            <div class="text-center mt-12">
+                <button id="load-more" class="glass-effect px-8 py-4 rounded-lg hover:bg-white/10 transition-all">
+                    Load More Artworks
+                </button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Market Analytics Section -->
+    <section class="py-20 px-6 bg-soft-gray/30">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="text-4xl font-bold mb-4">Market Analytics</h2>
+                <p class="text-xl text-gray-400">Real-time insights from the digital art marketplace</p>
+            </div>
+            
+            <div class="grid lg:grid-cols-2 gap-12">
+                <div class="scroll-reveal">
+                    <div class="glass-effect p-6 rounded-xl">
+                        <h3 class="text-xl font-semibold mb-4">Price Trends</h3>
+                        <div id="price-chart" class="h-64"></div>
+                    </div>
+                </div>
+                <div class="scroll-reveal">
+                    <div class="glass-effect p-6 rounded-xl">
+                        <h3 class="text-xl font-semibold mb-4">Category Distribution</h3>
+                        <div id="category-chart" class="h-64"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Community Section -->
+    <section class="py-20 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="text-4xl font-bold mb-4">Join the Community</h2>
+                <p class="text-xl text-gray-400 max-w-2xl mx-auto">
+                    Connect with artists, collectors, and enthusiasts in our vibrant digital art community
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="glass-effect p-8 rounded-xl text-center scroll-reveal">
+                    <div class="w-16 h-16 bg-gradient-to-r from-accent-blue to-accent-violet rounded-full mx-auto mb-4 flex items-center justify-center">
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">For Artists</h3>
+                    <p class="text-gray-400 mb-4">Showcase your work to a global audience of collectors and enthusiasts</p>
+                    <button class="text-accent-blue hover:text-accent-violet transition-colors">Get Started →</button>
+                </div>
+                
+                <div class="glass-effect p-8 rounded-xl text-center scroll-reveal">
+                    <div class="w-16 h-16 bg-gradient-to-r from-accent-amber to-accent-blue rounded-full mx-auto mb-4 flex items-center justify-center">
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">For Collectors</h3>
+                    <p class="text-gray-400 mb-4">Discover unique digital artworks and build your collection with confidence</p>
+                    <button class="text-accent-blue hover:text-accent-violet transition-colors">Browse Art →</button>
+                </div>
+                
+                <div class="glass-effect p-8 rounded-xl text-center scroll-reveal">
+                    <div class="w-16 h-16 bg-gradient-to-r from-accent-violet to-accent-amber rounded-full mx-auto mb-4 flex items-center justify-center">
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">For Enthusiasts</h3>
+                    <p class="text-gray-400 mb-4">Explore the latest trends and engage with the digital art community</p>
+                    <button class="text-accent-blue hover:text-accent-violet transition-colors">Join Now →</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="py-12 px-6 border-t border-white/10">
+        <div class="max-w-7xl mx-auto text-center">
+            <div class="mb-8">
+                <h3 class="text-2xl font-bold gradient-text mb-2">Atelier</h3>
+                <p class="text-gray-400">The future of digital art exhibition</p>
+            </div>
+            <div class="text-sm text-gray-500">
+                © 2024 Atelier Digital. All rights reserved.
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script src="main.js"></script>
+</body>
+</html>

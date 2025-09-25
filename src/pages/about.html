@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comunidade e Sobre - Atelier Digital</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Core Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.0/echarts.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                        'mono': ['JetBrains Mono', 'monospace']
+                    },
+                    colors: {
+                        'deep-gray': '#1a1a1a',
+                        'soft-gray': '#2d2d2d',
+                        'medium-gray': '#404040',
+                        'accent-blue': '#4a90e2',
+                        'accent-amber': '#f5a623',
+                        'accent-violet': '#9013fe'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            overflow-x: hidden;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #4a90e2 0%, #f5a623 50%, #9013fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-blur {
+            backdrop-filter: blur(20px);
+            background: rgba(26, 26, 26, 0.9);
+        }
+        
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .team-avatar {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #4a90e2 0%, #f5a623 50%, #9013fe 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 36px;
+            margin: 0 auto 1rem;
+        }
+        
+        .stat-counter {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #4a90e2;
+        }
+        
+        .faq-item {
+            transition: all 0.3s ease;
+        }
+        
+        .faq-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .faq-item.active .faq-content {
+            max-height: 200px;
+        }
+        
+        .faq-item.active .faq-toggle {
+            transform: rotate(45deg);
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.1) 0%, rgba(245, 166, 35, 0.1) 50%, rgba(144, 19, 254, 0.1) 100%);
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-left: 2rem;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.5rem;
+            width: 12px;
+            height: 12px;
+            background: linear-gradient(135deg, #4a90e2 0%, #9013fe 100%);
+            border-radius: 50%;
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 1.5rem;
+            width: 2px;
+            height: calc(100% - 1rem);
+            background: linear-gradient(180deg, #4a90e2 0%, transparent 100%);
+        }
+        
+        .timeline-item:last-child::after {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-deep-gray text-white font-inter">
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 nav-blur border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <h1 class="text-2xl font-bold gradient-text">nft.art.br</h1>
+                    <div class="hidden md:flex space-x-6">
+                        <a href="index.html" class="text-gray-400 hover:text-white transition-colors">Galeria</a>
+                        <a href="gallery.html" class="text-gray-400 hover:text-white transition-colors">Explorar</a>
+                        <a href="about.html" class="text-white">Comunidade</a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="glass-effect px-4 py-2 rounded-lg hover:bg-white/10 transition-colors">
+                        Conectar Carteira
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 px-6 hero-gradient">
+        <div class="max-w-4xl mx-auto text-center">
+            <h1 class="text-6xl font-bold mb-6 scroll-reveal">
+                Construindo o Futuro da
+                <span class="gradient-text">Arte Digital</span>
+            </h1>
+            <p class="text-xl text-gray-300 leading-relaxed mb-8 scroll-reveal">
+                O Atelier é mais que um marketplace—é uma plataforma orientada pela comunidade onde artistas, colecionadores e entusiastas se unem para moldar o futuro da arte digital e cultura.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center scroll-reveal">
+                <button class="glass-effect px-8 py-4 rounded-lg hover:bg-white/10 transition-all hover:scale-105">
+                    Junte-se à Nossa Comunidade
+                </button>
+                <button class="border border-white/20 px-8 py-4 rounded-lg hover:bg-white/10 transition-all">
+                    Começar a Criar
+                </button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Platform Stats -->
+    <section class="py-20 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div class="text-center scroll-reveal">
+                    <div class="stat-counter" data-target="2847">0</div>
+                    <div class="text-gray-400">Obras Listadas</div>
+                </div>
+                <div class="text-center scroll-reveal">
+                    <div class="stat-counter" data-target="1293">0</div>
+                    <div class="text-gray-400">Artistas Ativos</div>
+                </div>
+                <div class="text-center scroll-reveal">
+                    <div class="stat-counter" data-target="4567">0</div>
+                    <div class="text-gray-400">Colecionadores</div>
+                </div>
+                <div class="text-center scroll-reveal">
+                    <div class="stat-counter" data-target="12456">0</div>
+                    <div class="text-gray-400">Volume ETH</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Mission & Vision -->
+    <section class="py-20 px-6 bg-soft-gray/30">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="scroll-reveal">
+                    <h2 class="text-4xl font-bold mb-6">Nossa Missão</h2>
+                    <p class="text-lg text-gray-300 leading-relaxed mb-6">
+                        Acreditamos que a arte digital representa o futuro da expressão criativa. Nossa missão é criar uma plataforma que capacite artistas a mostrar seu trabalho, conectar-se com colecionadores e construir carreiras sustentáveis no espaço da arte digital.
+                    </p>
+                    <p class="text-lg text-gray-300 leading-relaxed mb-8">
+                        Através da tecnologia blockchain e governança comunitária, estamos construindo um ecossistema transparente, justo e inovador que beneficia todos os envolvidos na criação e apreciação da arte digital.
+                    </p>
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-2 h-2 bg-accent-blue rounded-full"></div>
+                            <span>Capacitando artistas com compensação justa e liberdade criativa</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="w-2 h-2 bg-accent-amber rounded-full"></div>
+                            <span>Construindo mecanismos de mercado transparentes e sem necessidade de confiança</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="w-2 h-2 bg-accent-violet rounded-full"></div>
+                            <span>Fomentando uma comunidade vibrante e inclusiva</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="scroll-reveal">
+                    <div class="glass-effect rounded-xl p-8">
+                        <h3 class="text-2xl font-bold mb-6">Recursos da Plataforma</h3>
+                        <div class="space-y-6">
+                            <div class="flex items-start space-x-4">
+                                <div class="w-12 h-12 bg-gradient-to-r from-accent-blue to-accent-violet rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold mb-1">Verificação Blockchain</h4>
+                                    <p class="text-sm text-gray-400">Cada obra de arte é cunhada como NFT com proveniência verificável e histórico de propriedade.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-4">
+                                <div class="w-12 h-12 bg-gradient-to-r from-accent-amber to-accent-blue rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold mb-1">Contratos Inteligentes</h4>
+                                    <p class="text-sm text-gray-400">Royalties automatizados garantem que artistas recebam compensação justa por cada venda secundária.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-4">
+                                <div class="w-12 h-12 bg-gradient-to-r from-accent-violet to-accent-amber rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold mb-1">Governança Comunitária</h4>
+                                    <p class="text-sm text-gray-400">Decisões da plataforma são tomadas através de votação comunitária e governança transparente.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Team Section -->
+    <section class="py-20 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="text-4xl font-bold mb-4">Conheça Nossa Equipe</h2>
+                <p class="text-xl text-gray-400 max-w-2xl mx-auto">
+                    Um grupo diverso de artistas, desenvolvedores e inovadores trabalhando juntos para construir o futuro da arte digital.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="text-center scroll-reveal">
+                    <div class="team-avatar">MR</div>
+                    <h3 class="text-xl font-semibold mb-2">Maya Rodriguez</h3>
+                    <p class="text-accent-blue mb-2">Fundadora & CEO</p>
+                    <p class="text-sm text-gray-400">Artista digital e pioneira em blockchain com mais de 8 anos no espaço de cripto arte.</p>
+                </div>
+                
+                <div class="text-center scroll-reveal">
+                    <div class="team-avatar">JL</div>
+                    <h3 class="text-xl font-semibold mb-2">James Liu</h3>
+                    <p class="text-accent-amber mb-2">CTO</p>
+                    <p class="text-sm text-gray-400">Desenvolvedor full-stack especializado em contratos inteligentes e sistemas descentralizados.</p>
+                </div>
+                
+                <div class="text-center scroll-reveal">
+                    <div class="team-avatar">SK</div>
+                    <h3 class="text-xl font-semibold mb-2">Sarah Kim</h3>
+                    <p class="text-accent-violet mb-2">Chefe de Comunidade</p>
+                    <p class="text-sm text-gray-400">Construtora de comunidade e defensora de artistas com raízes profundas no mundo da arte digital.</p>
+                </div>
+                
+                <div class="text-center scroll-reveal">
+                    <div class="team-avatar">AP</div>
+                    <h3 class="text-xl font-semibold mb-2">Alex Patel</h3>
+                    <p class="text-accent-blue mb-2">Designer Principal</p>
+                    <p class="text-sm text-gray-400">Designer UX/UI criando experiências imersivas e intuitivas para plataformas digitais.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Roadmap -->
+    <section class="py-20 px-6 bg-soft-gray/30">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="text-4xl font-bold mb-4">Roadmap da Plataforma</h2>
+                <p class="text-xl text-gray-400">
+                    Nossa visão para o futuro da arte digital e inovação orientada pela comunidade.
+                </p>
+            </div>
+            
+            <div class="space-y-8">
+                <div class="timeline-item scroll-reveal">
+                    <div class="glass-effect rounded-xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-semibold">Q4 2024 - Lançamento da Plataforma</h3>
+                            <span class="text-accent-blue font-mono text-sm">Concluído</span>
+                        </div>
+                        <p class="text-gray-300 mb-4">
+                            Lançamento oficial da plataforma Atelier com funcionalidade central de marketplace, integração de artistas e recursos comunitários.
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 bg-accent-blue/20 text-accent-blue rounded-full text-sm">Lançamento Marketplace</span>
+                            <span class="px-3 py-1 bg-accent-blue/20 text-accent-blue rounded-full text-sm">Integração Artistas</span>
+                            <span class="px-3 py-1 bg-accent-blue/20 text-accent-blue rounded-full text-sm">Recursos Comunidade</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item scroll-reveal">
+                    <div class="glass-effect rounded-xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-semibold">Q1 2025 - Recursos Aprimorados</h3>
+                            <span class="text-accent-amber font-mono text-sm">Em Progresso</span>
+                        </div>
+                        <p class="text-gray-300 mb-4">
+                            Introdução de ferramentas avançadas de curadoria, experiências de galeria VR e recursos sociais aprimorados para a comunidade.
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 bg-accent-amber/20 text-accent-amber rounded-full text-sm">Galerias VR</span>
+                            <span class="px-3 py-1 bg-accent-amber/20 text-accent-amber rounded-full text-sm">Ferramentas Curadoria</span>
+                            <span class="px-3 py-1 bg-accent-amber/20 text-accent-amber rounded-full text-sm">Recursos Sociais</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item scroll-reveal">
+                    <div class="glass-effect rounded-xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-semibold">Q2 2025 - Governança DAO</h3>
+                            <span class="text-gray-400 font-mono text-sm">Planejado</span>
+                        </div>
+                        <p class="text-gray-300 mb-4">
+                            Lançamento do DAO Atelier, permitindo governança comunitária sobre decisões da plataforma, curadoria e gestão do tesouro.
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 bg-gray-600/20 text-gray-400 rounded-full text-sm">Lançamento DAO</span>
+                            <span class="px-3 py-1 bg-gray-600/20 text-gray-400 rounded-full text-sm">Token Governança</span>
+                            <span class="px-3 py-1 bg-gray-600/20 text-gray-400 rounded-full text-sm">Votação Comunitária</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item scroll-reveal">
+                    <div class="glass-effect rounded-xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-semibold">Q3 2025 - Expansão Global</h3>
+                            <span class="text-gray-400 font-mono text-sm">Futuro</span>
+                        </div>
+                        <p class="text-gray-300 mb-4">
+                            Expansão internacional com suporte multi-idioma, parcerias regionais e programas globais de residência artística.
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 bg-gray-600/20 text-gray-400 rounded-full text-sm">Multi-idioma</span>
+                            <span class="px-3 py-1 bg-gray-600/20 text-gray-400 rounded-full text-sm">Parcerias Globais</span>
+                            <span class="px-3 py-1 bg-gray-600/20 text-gray-400 rounded-full text-sm">Residências Artísticas</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- FAQ Section -->
+    <section class="py-20 px-6">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="text-4xl font-bold mb-4">Perguntas Frequentes</h2>
+                <p class="text-xl text-gray-400">
+                    Tudo que você precisa saber sobre o Atelier e colecionismo de arte digital.
+                </p>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="faq-item glass-effect rounded-xl scroll-reveal">
+                    <button class="w-full p-6 text-left flex items-center justify-between" onclick="toggleFAQ(this)">
+                        <span class="text-lg font-semibold">O que torna o Atelier diferente de outros marketplaces de NFT?</span>
+                        <svg class="w-6 h-6 faq-toggle transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                        </svg>
+                    </button>
+                    <div class="faq-content px-6 pb-6">
+                        <p class="text-gray-300">
+                            O Atelier foca em criar uma experiência de galeria imersiva com governança comunitária, curadoria transparente e compensação justa para artistas. Priorizamos mérito artístico sobre especulação e fornecemos ferramentas para apreciação significativa da arte.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="faq-item glass-effect rounded-xl scroll-reveal">
+                    <button class="w-full p-6 text-left flex items-center justify-between" onclick="toggleFAQ(this)">
+                        <span class="text-lg font-semibold">Como os artistas se beneficiam ao usar o Atelier?</span>
+                        <svg class="w-6 h-6 faq-toggle transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                        </svg>
+                    </button>
+                    <div class="faq-content px-6 pb-6">
+                        <p class="text-gray-300">
+                            Artistas recebem royalties automatizados em todas as vendas secundárias, mecanismos justos de precificação inicial, suporte e promoção da comunidade, e acesso a oportunidades exclusivas de exposição e programas de residência artística.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="faq-item glass-effect rounded-xl scroll-reveal">
+                    <button class="w-full p-6 text-left flex items-center justify-between" onclick="toggleFAQ(this)">
+                        <span class="text-lg font-semibold">Qual blockchain o Atelier usa?</span>
+                        <svg class="w-6 h-6 faq-toggle transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                        </svg>
+                    </button>
+                    <div class="faq-content px-6 pb-6">
+                        <p class="text-gray-300">
+                            O Atelier é construído no Ethereum com planos de expandir para soluções Layer 2 para reduzir taxas de gas e impacto ambiental. Todas as obras de arte são tokens ERC-721 com metadados armazenados no IPFS.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="faq-item glass-effect rounded-xl scroll-reveal">
+                    <button class="w-full p-6 text-left flex items-center justify-between" onclick="toggleFAQ(this)">
+                        <span class="text-lg font-semibold">Como funciona a governança comunitária?</span>
+                        <svg class="w-6 h-6 faq-toggle transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                        </svg>
+                    </button>
+                    <div class="faq-content px-6 pb-6">
+                        <p class="text-gray-300">
+                            Portadores de tokens ATELIER podem participar da governança da plataforma votando em propostas para novos recursos, políticas de curadoria, estruturas de taxas e iniciativas comunitárias. O poder de voto é proporcional às participações de tokens.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="faq-item glass-effect rounded-xl scroll-reveal">
+                    <button class="w-full p-6 text-left flex items-center justify-between" onclick="toggleFAQ(this)">
+                        <span class="text-lg font-semibold">Quais são as taxas para usar o Atelier?</span>
+                        <svg class="w-6 h-6 faq-toggle transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                        </svg>
+                    </button>
+                    <div class="faq-content px-6 pb-6">
+                        <p class="text-gray-300">
+                            Vendas primárias têm uma taxa de plataforma de 2,5%. Vendas secundárias têm uma taxa de plataforma de 2,5% mais royalties do artista (tipicamente 10%). Sem taxas ocultas ou transações sem gas para compradores.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CTA Section -->
+    <section class="py-20 px-6 bg-soft-gray/30">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="scroll-reveal">
+                <h2 class="text-4xl font-bold mb-6">Pronto para se Juntar à Revolução?</h2>
+                <p class="text-xl text-gray-300 mb-8">
+                    Seja você um artista procurando mostrar seu trabalho ou um colecionador buscando arte digital única, o Atelier fornece a plataforma perfeita para conectar, criar e colecionar.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button class="glass-effect px-8 py-4 rounded-lg hover:bg-white/10 transition-all hover:scale-105">
+                        Comece Sua Jornada
+                    </button>
+                    <button class="border border-white/20 px-8 py-4 rounded-lg hover:bg-white/10 transition-all">
+                        Entre em Contato
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="py-12 px-6 border-t border-white/10">
+        <div class="max-w-7xl mx-auto text-center">
+            <div class="mb-8">
+                <h3 class="text-2xl font-bold gradient-text mb-2">nft.art.br</h3>
+                <p class="text-gray-400">O futuro da exposição de arte digital</p>
+            </div>
+            <div class="text-sm text-gray-500">
+                © 2024 Atelier Digital. Todos os direitos reservados.
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script>
+        // Initialize scroll reveal
+        document.addEventListener('DOMContentLoaded', function() {
+            initScrollReveal();
+            initStatCounters();
+        });
+        
+        // Scroll reveal animation
+        function initScrollReveal() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                    }
+                });
+            }, observerOptions);
+            
+            document.querySelectorAll('.scroll-reveal').forEach(el => {
+                observer.observe(el);
+            });
+        }
+        
+        // Animated stat counters
+        function initStatCounters() {
+            const counters = document.querySelectorAll('.stat-counter');
+            
+            const counterObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateCounter(entry.target);
+                        counterObserver.unobserve(entry.target);
+                    }
+                });
+            });
+            
+            counters.forEach(counter => {
+                counterObserver.observe(counter);
+            });
+        }
+        
+        function animateCounter(element) {
+            const target = parseInt(element.dataset.target);
+            const duration = 2000;
+            const increment = target / (duration / 16);
+            let current = 0;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                element.textContent = Math.floor(current).toLocaleString();
+            }, 16);
+        }
+        
+        // FAQ toggle functionality
+        function toggleFAQ(button) {
+            const faqItem = button.parentElement;
+            const isActive = faqItem.classList.contains('active');
+            
+            // Close all FAQ items
+            document.querySelectorAll('.faq-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Open clicked item if it wasn't active
+            if (!isActive) {
+                faqItem.classList.add('active');
+            }
+        }
+        
+        // Initialize entrance animations
+        setTimeout(() => {
+            anime({
+                targets: '.scroll-reveal',
+                opacity: [0, 1],
+                translateY: [30, 0],
+                delay: anime.stagger(100),
+                duration: 800,
+                easing: 'easeOutQuart'
+            });
+        }, 100);
+    </script>
+</body>
+</html>

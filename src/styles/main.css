@@ -1,0 +1,52 @@
+/* Main CSS file - imports all other stylesheets */
+@import url('./base/reset.css');
+@import url('./base/typography.css');
+@import url('./components/navigation.css');
+@import url('./components/cards.css');
+@import url('./components/buttons.css');
+@import url('./components/gallery.css');
+@import url('./layouts/grid.css');
+@import url('./utilities/animations.css');
+@import url('./utilities/effects.css');
+
+/* Global Styles */
+body {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    overflow-x: hidden;
+}
+
+/* Gradient Text Utility */
+.gradient-text {
+    background: linear-gradient(135deg, #4a90e2 0%, #f5a623 50%, #9013fe 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Particle Background */
+.particle-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.3;
+}
+
+/* Hero Gradient */
+.hero-gradient {
+    background: linear-gradient(135deg, rgba(74, 144, 226, 0.1) 0%, rgba(245, 166, 35, 0.1) 50%, rgba(144, 19, 254, 0.1) 100%);
+}
+
+/* Scroll Reveal Animation */
+.scroll-reveal {
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.scroll-reveal.revealed {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}

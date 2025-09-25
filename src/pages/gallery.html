@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeria Imersiva - Atelier Digital</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Core Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+    
+    <!-- Splide CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                        'mono': ['JetBrains Mono', 'monospace']
+                    },
+                    colors: {
+                        'deep-gray': '#1a1a1a',
+                        'soft-gray': '#2d2d2d',
+                        'medium-gray': '#404040',
+                        'accent-blue': '#4a90e2',
+                        'accent-amber': '#f5a623',
+                        'accent-violet': '#9013fe'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            background: #000;
+            overflow: hidden;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #4a90e2 0%, #f5a623 50%, #9013fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-blur {
+            backdrop-filter: blur(20px);
+            background: rgba(0, 0, 0, 0.9);
+        }
+        
+        .gallery-container {
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+        }
+        
+        .artwork-slide {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            position: relative;
+        }
+        
+        .artwork-display {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+        }
+        
+        .info-overlay {
+            position: absolute;
+            bottom: 6rem;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .info-overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .progress-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #4a90e2 0%, #f5a623 50%, #9013fe 100%);
+            transition: width 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .keyboard-hint {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            opacity: 0.3;
+            font-size: 12px;
+            color: white;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+        
+        .splide__track {
+            overflow: visible;
+        }
+        
+        .splide__slide {
+            opacity: 0.3;
+            transition: opacity 0.5s ease;
+        }
+        
+        .splide__slide.is-active {
+            opacity: 1;
+        }
+        
+        .splide__arrows {
+            display: none;
+        }
+        
+        .splide__pagination {
+            display: none;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .slide-counter {
+            position: fixed;
+            top: 50%;
+            right: 2rem;
+            transform: translateY(-50%);
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            color: white;
+            opacity: 0.6;
+            font-size: 14px;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body class="bg-black text-white font-inter">
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 nav-blur border-b border-white/10 transition-opacity duration-300" id="main-nav">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <h1 class="text-2xl font-bold gradient-text">nft.art.br</h1>
+                    <div class="hidden md:flex space-x-6">
+                        <a href="index.html" class="text-gray-400 hover:text-white transition-colors">Galeria</a>
+                        <a href="gallery.html" class="text-white">Explorar</a>
+                        <a href="about.html" class="text-gray-400 hover:text-white transition-colors">Comunidade</a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="glass-effect px-4 py-2 rounded-lg hover:bg-white/10 transition-colors" onclick="toggleFullscreen()">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
+                        </svg>
+                    </button>
+                    <button class="glass-effect px-4 py-2 rounded-lg hover:bg-white/10 transition-colors" onclick="toggleInfo()">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </button>
+                    <button class="glass-effect px-4 py-2 rounded-lg hover:bg-white/10 transition-colors" onclick="toggleUI()">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Gallery Container -->
+    <div class="gallery-container">
+        <div class="splide" id="gallery-splide">
+            <div class="splide__track">
+                <ul class="splide__list" id="gallery-slides">
+                    <!-- Slides will be populated by JavaScript -->
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Info Overlay -->
+    <div class="info-overlay" id="info-overlay">
+        <div class="glass-effect rounded-xl p-6 max-w-md mx-auto">
+            <div id="current-artwork-info">
+                <!-- Artwork info will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progress-bar"></div>
+    
+    <!-- Slide Counter -->
+    <div class="slide-counter" id="slide-counter">
+        <span id="current-slide">1</span> / <span id="total-slides">12</span>
+    </div>
+    
+    <!-- Keyboard Hints -->
+    <div class="keyboard-hint">
+        ← → / Espaço / Home / End / F / I / H
+    </div>
+    
+    <!-- JavaScript -->
+    <script>
+        // Global variables
+        let gallerySplide;
+        let artworks = [];
+        let uiVisible = true;
+        let infoVisible = false;
+        
+        // Initialize gallery
+        document.addEventListener('DOMContentLoaded', function() {
+            initArtworkData();
+            initGallery();
+            initKeyboardControls();
+            initProgressBar();
+        });
+        
+        // Initialize artwork data
+        function initArtworkData() {
+            artworks = [
+                {
+                    id: 1,
+                    title: "Metamorfose Digital",
+                    artist: "Elena Rodriguez",
+                    price: "Ξ2.45",
+                    category: "Abstrata",
+                    image: "https://kimi-web-img.moonshot.cn/img/mir-s3-cdn-cf.behance.net/d9e0560c8d25291c0f3053ee82c9dde0df6532f2.jpg",
+                    description: "Uma exploração da transformação digital e formas orgânicas"
+                },
+                {
+                    id: 2,
+                    title: "Sonhos Neon",
+                    artist: "Kai Nakamura",
+                    price: "Ξ1.89",
+                    category: "Generativa",
+                    image: "https://kimi-web-img.moonshot.cn/img/images.squarespace-cdn.com/6f7fbfcb402d3d971e4c90aa139a202a168df0df.jpg",
+                    description: "Obra de arte generativa explorando paisagens urbanas"
+                },
+                {
+                    id: 3,
+                    title: "Emaranhamento Quântico",
+                    artist: "Alex Chen",
+                    price: "Ξ3.21",
+                    category: "Abstrata",
+                    image: "https://kimi-web-img.moonshot.cn/img/forkast.news/bffb47b3bd53f486ebb986d2f627d17725874e4f.jpg",
+                    description: "Representação abstrata de conceitos de física quântica"
+                },
+                {
+                    id: 4,
+                    title: "Natureza Sintética",
+                    artist: "Maya Patel",
+                    price: "Ξ1.56",
+                    category: "Arte 3D",
+                    image: "https://kimi-web-img.moonshot.cn/img/images.squarespace-cdn.com/a55b436c3060ca4bf72103d2967d9328e3500729.jpg",
+                    description: "Exploração renderizada em 3D de ecossistemas artificiais"
+                },
+                {
+                    id: 5,
+                    title: "Fluxos de Dados",
+                    artist: "Jordan Kim",
+                    price: "Ξ2.78",
+                    category: "Generativa",
+                    image: "https://kimi-web-img.moonshot.cn/img/n.sinaimg.cn/bead102cc7f9e127f52640be81bda010baf2ce5a.jpg",
+                    description: "Visualização de dados em tempo real como arte abstrata"
+                },
+                {
+                    id: 6,
+                    title: "Construções Etéreas",
+                    artist: "Sam Torres",
+                    price: "Ξ4.12",
+                    category: "Arte 3D",
+                    image: "https://kimi-web-img.moonshot.cn/img/creation-studios.com/0304a7554b2be772703377bd4228fdd575ed3792.jpg",
+                    description: "Formas arquitetônicas no espaço digital"
+                },
+                {
+                    id: 7,
+                    title: "Fluxo Cromático",
+                    artist: "Luna Martinez",
+                    price: "Ξ1.98",
+                    category: "Abstrata",
+                    image: "https://kimi-web-img.moonshot.cn/img/nftify-platform.s3.ap-southeast-1.amazonaws.com/c8699a96346a8bbae3c31fd0c30dc3429539058c.png",
+                    description: "Exploração da teoria das cores em meio digital"
+                },
+                {
+                    id: 8,
+                    title: "Sonhos Blockchain",
+                    artist: "Ryan O'Connor",
+                    price: "Ξ3.67",
+                    category: "Generativa",
+                    image: "https://kimi-web-img.moonshot.cn/img/info.gamma.io/a1c54e2ff10e044fe15e7521478044d68f454965.webp",
+                    description: "Representação visual da tecnologia blockchain"
+                },
+                {
+                    id: 9,
+                    title: "Esculturas Virtuais",
+                    artist: "Zoe Williams",
+                    price: "Ξ2.23",
+                    category: "Arte 3D",
+                    image: "https://kimi-web-img.moonshot.cn/img/images.squarespace-cdn.com/3698ed69f1151c9c031cb13f9a59c3037cad9138.jpg",
+                    description: "Formas esculturais criadas em realidade virtual"
+                },
+                {
+                    id: 10,
+                    title: "Poesia Pixel",
+                    artist: "Marcus Johnson",
+                    price: "Ξ1.34",
+                    category: "Abstrata",
+                    image: "https://kimi-web-img.moonshot.cn/img/images.squarespace-cdn.com/5a59d154d19f81f7d00705d173f0f61b7e1702fa.jpg",
+                    description: "Exploração minimalista do pixel como unidade artística"
+                },
+                {
+                    id: 11,
+                    title: "Universo Fractal",
+                    artist: "Aria Singh",
+                    price: "Ξ5.89",
+                    category: "Generativa",
+                    image: "https://kimi-web-img.moonshot.cn/img/d1ee3oaj5b5ueh.cloudfront.net/bc4524c369a3b92fb08c50448e9d99467c834ec1.jpeg",
+                    description: "Beleza matemática através de geração algorítmica"
+                },
+                {
+                    id: 12,
+                    title: "Arqueologia Digital",
+                    artist: "Felix Brown",
+                    price: "Ξ2.45",
+                    category: "Arte 3D",
+                    image: "https://kimi-web-img.moonshot.cn/img/3dmdb.com/f4bfdad181a5b33720a53d3573a73515a2ad6fe8.jpg",
+                    description: "Escavando artefatos digitais de mundos virtuais"
+                }
+            ];
+        }
+        
+        // Initialize gallery
+        function initGallery() {
+            const slidesContainer = document.getElementById('gallery-slides');
+            
+            // Create slides
+            artworks.forEach((artwork, index) => {
+                const slide = document.createElement('li');
+                slide.className = 'splide__slide';
+                slide.innerHTML = `
+                    <div class="artwork-slide">
+                        <img src="${artwork.image}" alt="${artwork.title}" class="artwork-display fade-in" data-index="${index}">
+                    </div>
+                `;
+                slidesContainer.appendChild(slide);
+            });
+            
+            // Initialize Splide
+            gallerySplide = new Splide('#gallery-splide', {
+                type: 'loop',
+                autoplay: false,
+                speed: 1000,
+                easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+                arrows: false,
+                pagination: false,
+                wheel: true,
+                wheelSleep: 300,
+                drag: true,
+                keyboard: false // We'll handle keyboard manually
+            });
+            
+            gallerySplide.on('moved', function(newIndex) {
+                updateProgress();
+                updateSlideCounter();
+                updateCurrentArtworkInfo();
+            });
+            
+            gallerySplide.mount();
+            
+            // Initialize displays
+            updateSlideCounter();
+            updateCurrentArtworkInfo();
+        }
+        
+        // Initialize keyboard controls
+        function initKeyboardControls() {
+            document.addEventListener('keydown', function(e) {
+                switch(e.key) {
+                    case 'ArrowLeft':
+                    case 'ArrowUp':
+                        e.preventDefault();
+                        gallerySplide.go('<');
+                        break;
+                    case 'ArrowRight':
+                    case 'ArrowDown':
+                        e.preventDefault();
+                        gallerySplide.go('>');
+                        break;
+                    case ' ':
+                        e.preventDefault();
+                        gallerySplide.go('>');
+                        break;
+                    case 'Home':
+                        e.preventDefault();
+                        gallerySplide.go(0);
+                        break;
+                    case 'End':
+                        e.preventDefault();
+                        gallerySplide.go(artworks.length - 1);
+                        break;
+                    case 'f':
+                    case 'F':
+                        e.preventDefault();
+                        toggleFullscreen();
+                        break;
+                    case 'i':
+                    case 'I':
+                        e.preventDefault();
+                        toggleInfo();
+                        break;
+                    case 'h':
+                    case 'H':
+                        e.preventDefault();
+                        toggleUI();
+                        break;
+                    case 'Escape':
+                        e.preventDefault();
+                        if (!uiVisible) {
+                            toggleUI();
+                        }
+                        break;
+                }
+            });
+        }
+        
+        // Initialize progress bar
+        function initProgressBar() {
+            updateProgress();
+        }
+        
+        // Update progress bar
+        function updateProgress() {
+            const currentIndex = gallerySplide.index;
+            const progress = ((currentIndex + 1) / artworks.length) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+        }
+        
+        // Update slide counter
+        function updateSlideCounter() {
+            const currentIndex = gallerySplide.index;
+            document.getElementById('current-slide').textContent = currentIndex + 1;
+            document.getElementById('total-slides').textContent = artworks.length;
+        }
+        
+        // Update current artwork info
+        function updateCurrentArtworkInfo() {
+            const currentIndex = gallerySplide.index;
+            const artwork = artworks[currentIndex];
+            const infoContainer = document.getElementById('current-artwork-info');
+            
+            infoContainer.innerHTML = `
+                <h2 class="text-2xl font-bold mb-2">${artwork.title}</h2>
+                <p class="text-gray-400 mb-4">by ${artwork.artist}</p>
+                <p class="text-sm text-gray-300 mb-4">${artwork.description}</p>
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-accent-blue font-mono text-lg">${artwork.price}</span>
+                    <span class="text-sm text-gray-400">${artwork.category}</span>
+                </div>
+                <div class="flex space-x-3">
+                    <button class="flex-1 bg-gradient-to-r from-accent-blue to-accent-violet text-white py-2 px-4 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity" onclick="purchaseArtwork(${artwork.id})">
+                        Comprar
+                    </button>
+                    <button class="flex-1 glass-effect py-2 px-4 rounded-lg text-sm font-semibold hover:bg-white/10 transition-colors" onclick="saveArtwork(${artwork.id})">
+                        Salvar
+                    </button>
+                </div>
+            `;
+        }
+        
+        // Toggle functions
+        function toggleUI() {
+            uiVisible = !uiVisible;
+            const nav = document.getElementById('main-nav');
+            const counter = document.querySelector('.slide-counter');
+            const hints = document.querySelector('.keyboard-hint');
+            
+            if (uiVisible) {
+                nav.style.opacity = '1';
+                counter.style.opacity = '0.6';
+                hints.style.opacity = '0.3';
+            } else {
+                nav.style.opacity = '0';
+                counter.style.opacity = '0';
+                hints.style.opacity = '0';
+            }
+        }
+        
+        function toggleInfo() {
+            infoVisible = !infoVisible;
+            const overlay = document.getElementById('info-overlay');
+            
+            if (infoVisible) {
+                overlay.classList.add('visible');
+            } else {
+                overlay.classList.remove('visible');
+            }
+        }
+        
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log(`Error attempting to enable fullscreen: ${err.message}`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+        
+        // Action functions
+        function purchaseArtwork(artworkId) {
+            const artwork = artworks.find(a => a.id === artworkId);
+            alert(`Iniciando compra para "${artwork.title}"`);
+            // In a real implementation, this would open a purchase modal
+        }
+        
+        function saveArtwork(artworkId) {
+            const artwork = artworks.find(a => a.id === artworkId);
+            alert(`"${artwork.title}" salvo na sua coleção`);
+            // In a real implementation, this would save to user's collection
+        }
+        
+        // Mouse movement to show UI
+        let uiTimeout;
+        document.addEventListener('mousemove', function() {
+            if (!uiVisible) {
+                toggleUI();
+            }
+            
+            clearTimeout(uiTimeout);
+            uiTimeout = setTimeout(() => {
+                if (uiVisible) {
+                    toggleUI();
+                }
+            }, 5000); // Hide UI after 5 seconds of inactivity
+        });
+        
+        // Prevent context menu
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+        
+        // Initialize entrance animation
+        setTimeout(() => {
+            anime({
+                targets: '.fade-in',
+                opacity: [0, 1],
+                scale: [0.95, 1],
+                duration: 1000,
+                easing: 'easeOutQuart'
+            });
+        }, 100);
+    </script>
+</body>
+</html>

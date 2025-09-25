@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes da Obra - Atelier Digital</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Core Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.0/echarts.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                        'mono': ['JetBrains Mono', 'monospace']
+                    },
+                    colors: {
+                        'deep-gray': '#1a1a1a',
+                        'soft-gray': '#2d2d2d',
+                        'medium-gray': '#404040',
+                        'accent-blue': '#4a90e2',
+                        'accent-amber': '#f5a623',
+                        'accent-violet': '#9013fe'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            overflow-x: hidden;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #4a90e2 0%, #f5a623 50%, #9013fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-blur {
+            backdrop-filter: blur(20px);
+            background: rgba(26, 26, 26, 0.9);
+        }
+        
+        .artwork-container {
+            max-height: calc(100vh - 200px);
+            overflow: hidden;
+        }
+        
+        .artwork-image {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+        }
+        
+        .info-panel {
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+        
+        .info-panel::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .info-panel::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+        
+        .info-panel::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+        }
+        
+        .blockchain-badge {
+            background: linear-gradient(135deg, #4a90e2 0%, #9013fe 100%);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        .creator-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #4a90e2 0%, #f5a623 50%, #9013fe 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+        }
+        
+        .price-history-chart {
+            height: 200px;
+        }
+        
+        .related-artwork {
+            transition: all 0.3s ease;
+        }
+        
+        .related-artwork:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(74, 144, 226, 0.3);
+        }
+        
+        .fullscreen-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .fullscreen-image {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body class="bg-deep-gray text-white font-inter">
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 nav-blur border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-8">
+                    <h1 class="text-2xl font-bold gradient-text">nft.art.br</h1>
+                    <div class="hidden md:flex space-x-6">
+                        <a href="index.html" class="text-gray-400 hover:text-white transition-colors">Galeria</a>
+                        <a href="gallery.html" class="text-gray-400 hover:text-white transition-colors">Explorar</a>
+                        <a href="about.html" class="text-gray-400 hover:text-white transition-colors">Comunidade</a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="history.back()" class="glass-effect px-4 py-2 rounded-lg hover:bg-white/10 transition-colors">
+                        ← Voltar
+                    </button>
+                    <button class="glass-effect px-4 py-2 rounded-lg hover:bg-white/10 transition-colors">
+                        Conectar Carteira
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <main class="pt-20 min-h-screen">
+        <div class="max-w-7xl mx-auto px-6 py-8">
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- Artwork Display -->
+                <div class="lg:col-span-2">
+                    <div class="glass-effect rounded-xl p-6">
+                        <div class="artwork-container flex items-center justify-center">
+                            <img id="main-artwork" src="" alt="" class="artwork-image rounded-lg cursor-pointer" onclick="toggleFullscreen()">
+                        </div>
+                        
+                        <!-- Artwork Controls -->
+                        <div class="flex items-center justify-between mt-6">
+                            <div class="flex items-center space-x-4">
+                                <button class="glass-effect p-2 rounded-lg hover:bg-white/10 transition-colors" onclick="zoomIn()">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                                    </svg>
+                                </button>
+                                <button class="glass-effect p-2 rounded-lg hover:bg-white/10 transition-colors" onclick="zoomOut()">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 12H6"/>
+                                    </svg>
+                                </button>
+                                <button class="glass-effect p-2 rounded-lg hover:bg-white/10 transition-colors" onclick="resetZoom()">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm text-gray-400">Zoom:</span>
+                                <span id="zoom-level" class="text-sm font-mono">100%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Information Panel -->
+                <div class="lg:col-span-1">
+                    <div class="info-panel space-y-6">
+                        <!-- Artwork Details -->
+                        <div class="glass-effect rounded-xl p-6">
+                            <div class="flex items-start justify-between mb-4">
+                                <div>
+                                    <h1 id="artwork-title" class="text-2xl font-bold mb-2"></h1>
+                                    <p id="artwork-category" class="text-sm text-gray-400 uppercase tracking-wide"></p>
+                                </div>
+                                <div class="blockchain-badge px-3 py-1 rounded-full text-xs font-semibold">
+                                    Verificado Blockchain
+                                </div>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <p id="artwork-description" class="text-gray-300 leading-relaxed"></p>
+                            </div>
+                            
+                            <!-- Price and Actions -->
+                            <div class="border-t border-white/10 pt-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div>
+                                        <div class="text-sm text-gray-400">Preço Atual</div>
+                                        <div id="artwork-price" class="text-2xl font-bold gradient-text"></div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-sm text-gray-400">Edição</div>
+                                        <div class="font-semibold">1 de 1</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="space-y-3">
+                                    <button class="w-full bg-gradient-to-r from-accent-blue to-accent-violet text-white py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity">
+                                        Comprar Agora
+                                    </button>
+                                    <button class="w-full glass-effect py-3 rounded-lg font-semibold hover:bg-white/10 transition-colors">
+                                        Fazer Oferta
+                                    </button>
+                                    <button class="w-full glass-effect py-3 rounded-lg font-semibold hover:bg-white/10 transition-colors">
+                                        Salvar na Coleção
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Creator Info -->
+                        <div class="glass-effect rounded-xl p-6">
+                            <h3 class="text-lg font-semibold mb-4">Criador</h3>
+                            <div class="flex items-center space-x-4 mb-4">
+                                <div id="creator-avatar" class="creator-avatar"></div>
+                                <div>
+                                    <div id="creator-name" class="font-semibold"></div>
+                                    <div class="text-sm text-gray-400">Artista Digital</div>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-300 mb-4">
+                                Artista digital estabelecido com mais de 5 anos de experiência em arte generativa e criações baseadas em blockchain.
+                            </p>
+                            <button class="w-full glass-effect py-2 rounded-lg text-sm hover:bg-white/10 transition-colors">
+                                Ver Perfil
+                            </button>
+                        </div>
+                        
+                        <!-- Provenance -->
+                        <div class="glass-effect rounded-xl p-6">
+                            <h3 class="text-lg font-semibold mb-4">Proveniência</h3>
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between text-sm">
+                                    <span class="text-gray-400">Criado</span>
+                                    <span id="creation-date"></span>
+                                </div>
+                                <div class="flex items-center justify-between text-sm">
+                                    <span class="text-gray-400">Token ID</span>
+                                    <span class="font-mono text-accent-blue">#12345</span>
+                                </div>
+                                <div class="flex items-center justify-between text-sm">
+                                    <span class="text-gray-400">Contract</span>
+                                    <span class="font-mono text-accent-blue">0x1234...5678</span>
+                                </div>
+                                <div class="flex items-center justify-between text-sm">
+                                    <span class="text-gray-400">Blockchain</span>
+                                    <span>Ethereum</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Price History -->
+                        <div class="glass-effect rounded-xl p-6">
+                            <h3 class="text-lg font-semibold mb-4">Histórico de Preços</h3>
+                            <div id="price-history-chart" class="price-history-chart"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Related Artworks Section -->
+    <section class="py-16 px-6 border-t border-white/10">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-3xl font-bold mb-8">Obras Relacionadas</h2>
+            <div id="related-artworks" class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Related artworks will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+    
+    <!-- Fullscreen Overlay -->
+    <div id="fullscreen-overlay" class="fullscreen-overlay" onclick="toggleFullscreen()">
+        <img id="fullscreen-image" src="" alt="" class="fullscreen-image">
+    </div>
+    
+    <!-- JavaScript -->
+    <script src="artwork.js"></script>
+</body>
+</html>
