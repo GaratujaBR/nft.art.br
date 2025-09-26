@@ -110,7 +110,7 @@ function initArtworkGrid() {
             artist: "Elena Rodriguez",
             price: "Ξ2.45",
             category: "abstract",
-            image: "https://kimi-web-img.moonshot.cn/img/mir-s3-cdn-cf.behance.net/d9e0560c8d25291c0f3053ee82c9dde0df6532f2.jpg",
+            image: "images/artworks/blob (1).png",
             description: "Uma exploração da transformação digital e formas orgânicas"
         },
         {
@@ -119,7 +119,7 @@ function initArtworkGrid() {
             artist: "Kai Nakamura",
             price: "Ξ1.89",
             category: "generative",
-            image: "https://kimi-web-img.moonshot.cn/img/images.squarespace-cdn.com/6f7fbfcb402d3d971e4c90aa139a202a168df0df.jpg",
+            image: "images/artworks/blob (1).png",
             description: "Obra de arte generativa explorando paisagens urbanas"
         },
         {
@@ -128,7 +128,7 @@ function initArtworkGrid() {
             artist: "Alex Chen",
             price: "Ξ3.21",
             category: "abstract",
-            image: "https://kimi-web-img.moonshot.cn/img/forkast.news/bffb47b3bd53f486ebb986d2f627d17725874e4f.jpg",
+            image: "images/artworks/blob (1).png",
             description: "Representação abstrata de conceitos de física quântica"
         },
         {
@@ -137,7 +137,7 @@ function initArtworkGrid() {
             artist: "Maya Patel",
             price: "Ξ1.56",
             category: "3d",
-            image: "https://kimi-web-img.moonshot.cn/img/images.squarespace-cdn.com/a55b436c3060ca4bf72103d2967d9328e3500729.jpg",
+            image: "images/artworks/blob (1).png",
             description: "Exploração renderizada em 3D de ecossistemas artificiais"
         },
         {
@@ -146,7 +146,7 @@ function initArtworkGrid() {
             artist: "Jordan Kim",
             price: "Ξ2.78",
             category: "generative",
-            image: "https://kimi-web-img.moonshot.cn/img/n.sinaimg.cn/bead102cc7f9e127f52640be81bda010baf2ce5a.jpg",
+            image: "images/artworks/blob (1).png",
             description: "Visualização de dados em tempo real como arte abstrata"
         },
         {
@@ -155,7 +155,7 @@ function initArtworkGrid() {
             artist: "Sam Torres",
             price: "Ξ4.12",
             category: "3d",
-            image: "https://kimi-web-img.moonshot.cn/img/creation-studios.com/0304a7554b2be772703377bd4228fdd575ed3792.jpg",
+            image: "images/artworks/blob (1).png",
             description: "Formas arquitetônicas no espaço digital"
         },
         {
@@ -164,7 +164,7 @@ function initArtworkGrid() {
             artist: "Luna Martinez",
             price: "Ξ1.98",
             category: "abstract",
-            image: "https://kimi-web-img.moonshot.cn/img/nftify-platform.s3.ap-southeast-1.amazonaws.com/c8699a96346a8bbae3c31fd0c30dc3429539058c.png",
+            image: "images/artworks/blob (1).png",
             description: "Exploração da teoria das cores em meio digital"
         },
         {
@@ -173,7 +173,7 @@ function initArtworkGrid() {
             artist: "Ryan O'Connor",
             price: "Ξ3.67",
             category: "generative",
-            image: "https://kimi-web-img.moonshot.cn/img/info.gamma.io/a1c54e2ff10e044fe15e7521478044d68f454965.webp",
+            image: "images/artworks/blob (1).png",
             description: "Representação visual da tecnologia blockchain"
         },
         {
@@ -182,7 +182,7 @@ function initArtworkGrid() {
             artist: "Zoe Williams",
             price: "Ξ2.23",
             category: "3d",
-            image: "https://kimi-web-img.moonshot.cn/img/images.squarespace-cdn.com/3698ed69f1151c9c031cb13f9a59c3037cad9138.jpg",
+            image: "images/artworks/blob (1).png",
             description: "Formas esculturais criadas em realidade virtual"
         },
         {
@@ -191,7 +191,7 @@ function initArtworkGrid() {
             artist: "Marcus Johnson",
             price: "Ξ1.34",
             category: "abstract",
-            image: "https://kimi-web-img.moonshot.cn/img/images.squarespace-cdn.com/5a59d154d19f81f7d00705d173f0f61b7e1702fa.jpg",
+            image: "images/artworks/blob (1).png",
             description: "Exploração minimalista do pixel como unidade artística"
         },
         {
@@ -200,7 +200,7 @@ function initArtworkGrid() {
             artist: "Aria Singh",
             price: "Ξ5.89",
             category: "generative",
-            image: "https://kimi-web-img.moonshot.cn/img/d1ee3oaj5b5ueh.cloudfront.net/bc4524c369a3b92fb08c50448e9d99467c834ec1.jpeg",
+            image: "images/artworks/blob (1).png",
             description: "Beleza matemática através de geração algorítmica"
         },
         {
@@ -209,7 +209,7 @@ function initArtworkGrid() {
             artist: "Felix Brown",
             price: "Ξ2.45",
             category: "3d",
-            image: "https://kimi-web-img.moonshot.cn/img/3dmdb.com/f4bfdad181a5b33720a53d3573a73515a2ad6fe8.jpg",
+            image: "images/artworks/blob (1).png",
             description: "Escavando artefatos digitais de mundos virtuais"
         }
     ];
