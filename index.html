@@ -52,8 +52,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            line-height: 1.15;
-            padding-bottom: 0.12em;
         }
         
         .living-card {
@@ -135,7 +133,7 @@
         <div class="max-w-7xl mx-auto px-6 py-4">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-8">
-                    <h1 class="text-2xl font-bold gradient-text">nft.art.br</h1>
+    <h1 class="text-2xl font-bold gradient-text">nft.art.br</h1>
                     <div class="hidden md:flex space-x-6">
                         <a href="index.html" class="text-white hover:text-accent-blue transition-colors">Galeria</a>
                         <a href="gallery.html" class="text-gray-400 hover:text-white transition-colors">Explorar</a>
@@ -161,9 +159,25 @@
         <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
             <div class="space-y-8">
                 <div class="space-y-4">
-                    <h1 class="text-6xl lg:text-8xl font-bold leading-tight" style="line-height:1.12; padding-bottom:0.1em; overflow:visible;">
+                    <h1 class="text-6xl lg:text-8xl font-bold leading-none" style="margin-top: -15px;">
                         <span class="block">Exposição</span>
-                        <span class="block gradient-text">Digital</span></h1>
+                        <span class="block gradient-text">Digital</span>
+                    </h1>
+                    <style>
+                        @media (min-width: 640px) {
+                            .hero-title-fix { margin-top: -40px !important; }
+                        }
+                        @media (max-width: 639px) {
+                            .hero-title-fix { margin-top: -25px !important; }
+                        }
+                    </style>
+                    <script>
+                        // Add the class dynamically for safety
+                        document.addEventListener('DOMContentLoaded', function() {
+                            var heroTitle = document.querySelector('.hero-gradient h1');
+                            if(heroTitle) heroTitle.classList.add('hero-title-fix');
+                        });
+                    </script>
                     </h1>
                     <p class="text-xl text-gray-300 max-w-lg leading-relaxed">
                         Descubra, colecione e experimente arte digital contemporânea em um ambiente de galeria imersivo.
@@ -195,7 +209,7 @@
             </div>
             <div class="relative">
                 <div class="aspect-square rounded-2xl overflow-hidden living-card">
-                    <img src="src\assets\images\hero-gallery.jpg" alt="Digital Gallery" class="w-full h-full object-cover">
+                    <img src="images/hero-gallery.jpg" alt="Digital Gallery" class="w-full h-full object-cover">
                 </div>
                 <div class="absolute -bottom-6 -right-6 glass-effect p-4 rounded-xl">
                     <div class="text-sm text-gray-300">Artista em Destaque</div>
